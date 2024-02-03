@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -20,7 +21,7 @@ public class driveTrain extends SubsystemBase {
   private final TalonSRX fr_motor = new TalonSRX(Constants.frMotorID);
   private final TalonSRX bl_motor = new TalonSRX(Constants.blMotorID);
   private final TalonSRX br_motor = new TalonSRX(Constants.brMotorID);
-    
+  private boolean flag = false;
 
   public driveTrain() {
     fl_motor.setInverted(false);
@@ -37,11 +38,38 @@ public class driveTrain extends SubsystemBase {
     mot.setNeutralMode(NeutralMode.Coast);
   }
   public void drive(double x, double y, double theta){
+    double[] speeds = new double[3];
+    x = (x> Constants.deadband)? x:0;
+    y = (y> Constants.deadband)? y:0;
+    theta = (theta> Constants.deadband)? theta:0;
 
+    speeds[0] = x+y+ theta;
+    speeds[1] = x-y- theta;
+    speeds[2] = x-y+ theta;
+    speeds[3] = x+y- theta;
+    
+    double[] normalSpeeds = normalize(speeds);
+    double[] finalSpeed = (flag) ? normalSpeeds:speeds;
+
+    fl_motor.set(ControlMode.PercentOutput, finalSpeed[0]);
+    fr_motor.set(ControlMode.PercentOutput, finalSpeed[1]);
+    bl_motor.set(ControlMode.PercentOutput, finalSpeed[2]);
+    br_motor.set(ControlMode.PercentOutput, finalSpeed[3]);
   }
-  /*public double[] normalize(double x, double y, double theta){
-    return [2];
-  }*/
-
+  public double[] normalize(double[]nums){
+    flag = false;
+    double sum = 0;
+    for(int i = 0; i <3; i++){
+      sum+= nums[i];
+      if (nums[i] > 1){
+        flag = true;
+      }
+    }
+    for(int j = 0; j< 3; j++){
+      nums[j] /= sum;
+    }
+    return nums;
+  
+  }
   
 }

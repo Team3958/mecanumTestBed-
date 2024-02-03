@@ -21,4 +21,7 @@ public static final int flMotorID = 0;
 public static final int frMotorID = 0;
 public static final int blMotorID = 0;
 public static final int brMotorID = 0;
+
+//deadBand
+public static final double deadband = 0;
 }
