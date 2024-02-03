@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.driveTrain;
@@ -12,6 +13,7 @@ public class drivingCommand extends Command {
   /** Creates a new drivingCommand. */
   private XboxController xc;
   private driveTrain m_DriveTrain;
+  private final SlewRateLimiter slewRateLimiter = new SlewRateLimiter(0.1);
   public drivingCommand(driveTrain m_DriveTrain,XboxController xc) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.xc = xc;
@@ -26,7 +28,7 @@ public class drivingCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DriveTrain.drive(xc.getLeftY(), xc.getLeftX(), xc.getRightX());
+    m_DriveTrain.drive(slewRateLimiter.calculate(xc.getLeftY()), slewRateLimiter.calculate(xc.getLeftX()), slewRateLimiter.calculate(xc.getRightX()));
   }
 
   // Called once the command ends or is interrupted.
