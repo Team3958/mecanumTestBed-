@@ -61,7 +61,7 @@ public class driveTrain extends SubsystemBase {
     double sum = 0;
     for(int i = 0; i <3; i++){
       sum+= nums[i];
-      if (nums[i] > 1){
+      if (Math.abs(nums[i]) > 1){
         flag = true;
       }
     }
