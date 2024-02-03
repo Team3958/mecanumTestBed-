@@ -16,4 +16,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+// motor IDs
+public static final int flMotorID = 0;
+public static final int frMotorID = 0;
+public static final int blMotorID = 0;
+public static final int brMotorID = 0;
 }
